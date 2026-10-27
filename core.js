@@ -1,5 +1,19 @@
+/* Pure calculation engine. PC means nominal free-gas cubic feet, provisionally. */
 (function(root){'use strict';
-function parseNumber(value,kind='decimal'){let s=String(value).replace(/[\s\u00a0\u202f]/g,'');if(!s)throw Error('Completa todos los campos numéricos.');if(kind==='psi'){if(/^\d{1,3}(,\d{3})+$/.test(s))s=s.replace(/,/g,'');else if(/^\d+,\d{1,2}$/.test(s))s=s.replace(',','.');}else{if(s.includes(',')&&s.includes('.'))throw Error('Usa un solo separador decimal en el flujo.');s=s.replace(',','.');}if(!/^\d+(\.\d+)?$/.test(s))throw Error('Formato no válido. Usa números positivos; para miles en PSI usa espacios o comas.');const n=Number(s);if(!Number.isFinite(n))throw Error('Número fuera de rango.');return n;}
-function calculate(pc,pressure,flow,reserve,full){if(![60,220,300,370].includes(pc))throw Error('Selecciona una capacidad válida.');if(![pressure,flow,reserve,full].every(Number.isFinite)||pressure<0||reserve<0||flow<=0||full<=0)throw Error('Presiones y reserva deben ser no negativas; flujo y presión nominal, mayores que cero.');if(pressure>full)throw Error('La presión actual supera la nominal. Revisa la etiqueta y los valores.');if(reserve>=full)throw Error('La reserva debe ser menor que la presión nominal.');const liters=pc*28.316846592;const safe=liters*(Math.max(pressure-reserve,0)/full)/flow,zero=liters*(pressure/full)/flow;if(!Number.isFinite(zero)||zero>Number.MAX_SAFE_INTEGER)throw Error('El flujo produce un tiempo fuera de rango.');return {safe,zero};}
-function formatTime(minutes){const m=Math.floor(minutes);return {hm:Math.floor(m/60)+' h '+m%60+' min',days:Math.floor(m/1440)+' d '+Math.floor(m%1440/60)+' h '+m%60+' min'};}
-const api={parseNumber,calculate,formatTime};if(typeof module!=='undefined')module.exports=api;else root.OxyCore=api;})(globalThis);
+const PC_TO_L=28.316846592;
+function parse(value){const s=String(value).trim();return /^(?:\d+(?:[.,]\d+)?|[.,]\d+)$/.test(s)?Number(s.replace(',','.')):NaN;}
+function calculate(v){const errors={};
+if(![60,220,300,370].includes(v.capacity))errors.capacity='Selecciona un cilindro válido.';
+if(!Number.isFinite(v.nominal)||v.nominal<=0)errors.nominal='Introduce una presión nominal mayor que 0.';
+if(!Number.isFinite(v.pressure)||v.pressure<0)errors.pressure='Introduce una presión actual de 0 o más.';
+else if(Number.isFinite(v.nominal)&&v.pressure>v.nominal)errors.pressure='La presión actual no debe superar la nominal. Verifica ambos datos.';
+if(!Number.isFinite(v.reserve)||v.reserve<0)errors.reserve='Introduce una reserva de 0 o más.';
+else if(Number.isFinite(v.nominal)&&v.reserve>=v.nominal)errors.reserve='La reserva debe ser menor que la presión nominal.';
+if(!Number.isFinite(v.flow)||v.flow<=0)errors.flow='Introduce un flujo mayor que 0.';
+if(Object.keys(errors).length)return {errors};
+const factor=v.capacity*PC_TO_L/v.nominal,liters=factor*Math.max(v.pressure-v.reserve,0),safe=liters/v.flow,zero=factor*v.pressure/v.flow;
+if(![factor,liters,safe,zero].every(Number.isFinite)||zero>Number.MAX_SAFE_INTEGER)return {errors:{flow:'La combinación de valores excede el rango de cálculo. Verifica los datos.'}};
+return {errors:{},factor,liters,safe,zero};}
+function duration(minutes){if(minutes===0)return '0 min';if(minutes<1)return '<1 min';const total=Math.floor(minutes),d=Math.floor(total/1440),h=Math.floor((total%1440)/60),m=total%60;return (minutes>=1440?d+' d '+h+' h ':Math.floor(total/60)>0?Math.floor(total/60)+' h ':'')+m+' min';}
+const api={parse,calculate,duration,PC_TO_L};root.OxyTime=api;if(typeof module!=='undefined')module.exports=api;
+})(globalThis);

@@ -1,14 +1,14 @@
 {
   "id": "./",
-  "name": "OxyTime V5",
+  "name": "OxyTime V6",
   "short_name": "OxyTime",
-  "description": "Estimación de autonomía de oxígeno. Aproximación clínica no validada.",
+  "description": "Estimación de autonomía de oxígeno con reserva.",
   "lang": "es",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f2f6fb",
-  "theme_color": "#0969da",
+  "background_color": "#f4f7f7",
+  "theme_color": "#087f78",
   "icons": [
     {
       "src": "./icons/icon-192.png",

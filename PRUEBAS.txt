@@ -1,0 +1,42 @@
+OxyTime V6 — Informe de verificación, 26/10/2026
+
+AUTOMATIZACIÓN: 13 grupos aprobados
+PASS Referencia independiente 60 PC: 1500/2000 PSI, reserva 200, 5 L/min.
+PASS Escalado de las cuatro capacidades 60/220/300/370 PC.
+PASS Reserva igual y superior a presión actual: resultado no negativo.
+PASS Modificación de presión nominal recalcula el factor.
+PASS Reserva cero coincide con tiempo a cero teórico.
+PASS Rechazo de entradas inválidas, no finitas y relaciones incoherentes.
+PASS Decimales con punto y coma; rechazo de cadenas ambiguas.
+PASS Umbral exacto de 24 h y redondeo hacia abajo.
+PASS Protección ante desbordamiento numérico.
+PASS Todos los recursos del precaché existen (10 rutas).
+PASS Limpieza del worker conserva cachés de otras aplicaciones.
+PASS Navegación offline obtiene index.html (simulación del worker).
+PASS El worker no intercepta una ruta /gasometria/ (simulación).
+
+SINTAXIS: core.js, app.js y service-worker.js sin errores, node --check.
+
+NAVEGADOR REAL DE ESCRITORIO:
+- Respuesta HTTP 200 de la aplicación local.
+- Bienvenida y navegación a calculadora: comprobadas.
+- Registro de worker y aviso Lista sin conexión: comprobados.
+- Cálculo automático de ejemplo: 3 h 40 min / 4 h 14 min / 1104,4 L.
+- Flujo cero: muestra error y retira resultado anterior.
+- Nuevo cálculo: borra presión y flujo, retira resultados y enfoca presión.
+- Tema automático inicial oscuro; selección claro y oscuro comprobadas.
+- Persistencia del tema claro tras recarga: comprobada.
+- Inspección visual de calculadora clara y oscura a ancho de escritorio.
+- Se detuvo el servidor local: recarga exitosa desde el worker y cálculo
+  de ejemplo exitoso sin servidor disponible. No se usó modo avión del equipo.
+
+LÍMITES:
+- No se dispuso de capturas ni archivos V5: no hay comparación visual directa.
+- No se probaron dispositivos Android/iPhone reales ni instalación móvil.
+- No se realizó prueba visual con viewport móvil ni auditoría de accesibilidad.
+- No se probó migración desde el worker V5 ni despliegue real de GitHub Pages.
+- Las capacidades y su presión de referencia necesitan ficha técnica.
+- La comprobación matemática no equivale a validación clínica.
+
+Los archivos probados corresponden a la entrega del ZIP. Toda la lógica y los
+recursos están en el paquete, sin dependencias de red para calcular.
