@@ -1,0 +1,8 @@
+OxyTime V5
+9 grupos de pruebas de cálculo y estructura aprobados.
+JavaScript: sintaxis correcta.
+Edge: cálculo en pantalla móvil, tema persistente tras recarga, cálculo y recarga offline bajo /oxytime/, sin errores JavaScript ni desbordamiento horizontal.
+Vista móvil revisada visualmente.
+Manifest e iconos verificados.
+No se publicó ni modificó el repositorio GitHub. Instalación en dispositivos físicos pendiente de comprobar tras publicar.
+Aproximación clínica no validada.
