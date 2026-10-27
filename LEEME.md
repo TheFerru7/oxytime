@@ -1,76 +1,27 @@
-# OxyTime V6 · GitHub Pages
+# OxyTime V6 — corrección conservando V5
+Paquete preparado para revisión; no publicado.
 
-Entrega: 26 de octubre de 2026. Archivos estáticos, sin instalación de paquetes, fuentes externas, analítica ni servidor de aplicación. No se ha publicado ni modificado ningún repositorio.
+## Qué se comprobó en la web publicada
+Se abrió https://theferru7.github.io/oxytime/ y se observó el contenido HTML V6 con CSS V5: fondo #f2f6fb, sin reglas para welcome-card y sin el límite de ancho de la nueva bienvenida. La consola mostró TypeError: Cannot set properties of null (setting 'value') en app.js. El app.js V5 usa el campo full, que el HTML V6 anterior había reemplazado por nominal. La mezcla impide inicializar correctamente la app. El worker V5 recuperado usa caché primero para los recursos y red primero para la navegación, lo que explica esa mezcla.
 
-## Publicar reemplazando V5
+Además de ese fallo, la entrega anterior sustituyó el diseño original: se perdió el logo del cilindro con reloj y se cambiaron bienvenida, colores y paneles. Esta corrección toma el HTML, CSS, SVG y PNG originales del commit 243705e de TheFerru7/oxytime. Conserva la bienvenida centrada «El tiempo de tu oxígeno, más claro», el logo original y el estilo azul de V5.
 
-1. En GitHub entra únicamente en **TheFerru7/oxytime**. Descarga una copia de V5 o anota su último commit para poder restaurarlo.
-2. Revisa Settings → Pages y confirma qué rama y carpeta usa la versión actual. Si es `main` y `/ (root)`, coloca el contenido de este ZIP directamente en la raíz de `main`. Si Pages usa `/docs`, coloca el contenido en `/docs`. No agregues una carpeta contenedora OxyTime-V6.
-3. Usa Add file → Upload files y sube los archivos extraídos, incluida la carpeta `icons`. GitHub no descomprime un ZIP subido. Deben quedar `index.html`, `styles.css`, `core.js`, `app.js`, `manifest.webmanifest`, `service-worker.js`, `.nojekyll`, `icons/` y esta guía en la carpeta publicada. Confirma que los archivos existentes se reemplazan y no se duplican en otra carpeta.
-4. Conserva cualquier configuración existente de publicación, dominio, CNAME y archivos ajenos a OxyTime. Si ya existe un flujo de Actions para Pages, conserva su mecanismo y reemplaza solo los archivos de su carpeta de origen. No cambies a otro mecanismo de despliegue sin revisar esa configuración.
-5. Guarda un commit, espera el despliegue de Pages y abre **https://theferru7.github.io/oxytime/**. La cabecera debe indicar V6. No necesitas cambiar el repositorio ni los archivos de Gasometría Pro.
+## Funciones mantenidas
+60/220/300/370 PC; presión manual sin botones rápidos; nominal 2000 PSI y reserva 200 PSI editables; flujo continuo; ambos tiempos automáticos; días solo desde 24 h; nuevo cálculo; temas claro/oscuro/automático; validación; recursos offline y guía de instalación. Se conservan los formatos PSI de V5 (2000, 2 000, 2,000) y el guardado local de tema, reserva y presión nominal; no se guardan presión actual ni flujo. Al migrar, se conserva el tema V5, pero el valor nominal inicial pasa a 2000 PSI como fue aprobado.
 
-### Actualización de instalaciones V5
+El cálculo conserva el motor ya probado: contenido nominal L = PC × 28,316846592; factor L/PSI = contenido nominal / presión nominal; minutos a reserva = factor × máx(actual − reserva, 0) / flujo; cero teórico = factor × actual / flujo. Las capacidades y su correspondencia con la presión nominal siguen siendo provisionales, pendientes de ficha técnica. Es un modelo proporcional, no validación clínica.
 
-La implementación y el nombre del service worker anterior no estuvieron disponibles. Por ello, la migración automática desde cualquier V5 no puede garantizarse. El nuevo worker usa alcance relativo a `/oxytime/` y no borra cachés de otras aplicaciones. Solo limpia sus propias versiones de caché V6.
+Fuentes: https://www.nist.gov/document/1020-2-labeling-guides-volumepdf y https://www.nwts.nhs.uk/_file/pN0hvQGnbr_306184.pdf
 
-Tras publicar, abre OxyTime con internet, cierra sus ventanas y vuelve a abrirlo. Si aún ves V5, prueba una recarga completa. Si persiste, en las herramientas del navegador → Application/Aplicación → Service Workers, elimina **solo** el registro cuyo alcance sea `https://theferru7.github.io/oxytime/` y recarga esa dirección con internet. No uses «Borrar todos los datos del sitio», «Eliminar todos los service workers» ni limpies todo `theferru7.github.io`: podría afectar Gasometría Pro. En iPhone, quitar el acceso de OxyTime y volver a añadirlo puede ayudar, pero no garantiza limpiar el registro anterior. No borres datos globales de Safari.
+## Cómo resuelve la mezcla de versiones
+El HTML usa oxytime-v6-1.css, oxytime-v6-1-core.js y oxytime-v6-1-app.js. Esos nombres no coinciden con los recursos guardados por V5. sw.js y service-worker.js contienen el mismo worker para actualizar cualquiera de las dos rutas previas de OxyTime. El nuevo worker limita todas sus rutas a su carpeta y solo elimina cachés identificadas de OxyTime, conservando las de Gasometría. Nunca borres todos los datos del dominio.
 
-Las actualizaciones V6 usan un nombre de caché versionado; para futuras modificaciones cambia `CACHE` en `service-worker.js`. El worker nuevo toma el control y recarga la página para evitar mezclar los recursos de dos versiones. Haz las actualizaciones fuera de un cálculo activo.
+## Subida, cuando se decida usar esta corrección
+En TheFerru7/oxytime → main → Add file → Upload files, subir todo el contenido extraído de este ZIP, incluida icons, directamente en la raíz. Reemplazar los archivos del mismo nombre, en especial index.html, sw.js y service-worker.js. No subir una carpeta contenedora. Confirmar el commit y esperar Pages. No se requiere modificar Gasometría Pro.
 
-## Instalar y comprobar offline
+Abrir OxyTime con internet, cerrar ventanas antiguas y abrir de nuevo. Esperar «Lista para usar sin conexión». Si una instalación antigua no se actualiza, actualizar exclusivamente el registro con alcance /oxytime/; no limpiar todo theferru7.github.io.
 
-- Android: abre la URL en Chrome con internet y espera **Lista sin conexión**; menú → Instalar aplicación/Añadir a pantalla de inicio (la etiqueta depende del navegador).
-- iPhone: abre la URL en Safari con internet; Compartir → Añadir a pantalla de inicio. Abre también la instalación y espera **Lista sin conexión**.
-- En ambos: cierra la app, activa modo avión, ábrela de nuevo y realiza el ejemplo de abajo. Comprueba también la recarga sin conexión. La primera carga requiere internet y HTTPS; abrir `index.html` mediante `file://` no instala el servicio offline.
-- El sistema puede eliminar almacenamiento web, especialmente si hay poco espacio. Después de una limpieza de datos o reinstalación, abre con internet otra vez. La app no guarda presiones ni flujos; solo intenta conservar el tema.
+## Verificación y límites
+28 grupos de comprobaciones automatizadas aprobados: cálculo, cuatro capacidades, reserva, nominal, inválidos, decimales y umbral 24 h, coincidencia de campos HTML/JS, nombres nuevos de recursos, conservación literal de logo y CSS V5, precaché, limpieza aislada, navegación offline simulada y ambas rutas del worker. Incluye 14 grupos adicionales de interacción con DOM simulado: navegación, cálculo automático inmediato, retirada de resultados inválidos, cambio de nominal, reserva, días, tres temas, nuevo cálculo, persistencia y migración del tema V5, almacenamiento sin presión/flujo y formatos PSI. Sintaxis JS verificada.
 
-## Fórmula y supuesto provisional
-
-Se interpreta PC como pies cúbicos de **gas disponible nominal**, no volumen interno de agua del cilindro. Se supone provisionalmente que 60, 220, 300 y 370 PC corresponden a la presión nominal configurada (2000 PSI inicialmente). **Falta confirmar esa relación con la ficha técnica de cada cilindro/proveedor.** No se han certificado esas capacidades para tu equipo.
-
-`Vnominal (L) = PC × 28,316846592`
-
-`k (L/PSI) = Vnominal / Pnominal`
-
-`t_reserva (min) = k × max(Pactual − Preserva, 0) / flujo`
-
-`t_cero (min) = k × Pactual / flujo`
-
-Presiones manométricas en PSI; flujo en L/min. Se aproxima contenido proporcional a presión manométrica a temperatura constante. No se agrega presión atmosférica a esta aproximación práctica de contenido útil hasta cero manométrico. No modela compresibilidad real, cambios térmicos, fugas ni presión mínima de trabajo del regulador. Cero teórico no significa suministro clínicamente utilizable hasta el final.
-
-La conversión de PC a litros es verificable. La duración como contenido dividido entre flujo coincide con la referencia de NWTS. La corrección por fracción de presión es una aproximación de ingeniería; su aplicación a estas cuatro etiquetas sigue pendiente de datos del proveedor. No debe interpretarse como validación clínica del producto.
-
-Fuentes:
-- NIST, conversión exacta de ft³ a L: https://www.nist.gov/document/1020-2-labeling-guides-volumepdf
-- North West & North Wales Paediatric Transport Service, contenido/flujo: https://www.nwts.nhs.uk/_file/pN0hvQGnbr_306184.pdf
-
-### Ejemplo reproducible
-
-60 PC, presión actual 1500 PSI, nominal 2000 PSI, reserva 200 PSI, flujo 5 L/min:
-
-- Contenido nominal: 1699,01079552 L.
-- Factor: 0,84950539776 L/PSI.
-- Por encima de reserva: 1104,357017088 L.
-- Hasta reserva: 220,8714034176 min → **3 h 40 min**.
-- Hasta cero: 254,851619328 min → **4 h 14 min**.
-
-Los minutos completos se redondean hacia abajo. Entre 0 y 1 minuto aparece `<1 min`; cero exacto aparece `0 min`. Desde 1440 minutos se muestran días, horas y minutos; antes de 24 h no aparecen días.
-
-## Comportamiento y validación
-
-Dos pantallas: bienvenida y calculadora. La presión actual se escribe manualmente sin botones de acceso rápido. Presión nominal 2000 PSI y reserva 200 PSI editables. Flujo obligatorio mayor que cero. Se aceptan decimales con punto o coma, sin separador de miles. Se bloquean entradas vacías/no numéricas, valores no finitos, negativos, presión superior a nominal, reserva mayor o igual a nominal y resultados fuera de rango.
-
-La presión actual igual o menor a reserva es válida: muestra cero hasta reserva y un aviso. El resultado desaparece al invalidar una entrada. «Nuevo cálculo» borra presión actual y flujo, conservando cilindro, nominal, reserva y tema de la sesión. Nominal/reserva están dentro de un panel desplegable. Tema claro, oscuro y automático; automático sigue al sistema.
-
-## Revisión de V5 y alcance de las pruebas
-
-El historial recuperado no contenía capturas, adjuntos ni código V5; solo referencias a mensajes sin su contenido. No fue posible confirmar cuáles eran las inconsistencias visuales señaladas. V6 usa etiquetas y unidades uniformes, reserva como resultado principal, cero teórico secundario, aviso provisional visible, controles con foco, disposición de una columna bajo 650 px y temas con colores definidos para todos los paneles.
-
-Pruebas realizadas: comprobación de sintaxis de los tres archivos JavaScript; 13 grupos de pruebas automatizadas de fórmula, cuatro capacidades, reserva, cambio de nominal, decimales, entradas inválidas, umbral de 24 h, desbordamiento y worker en entorno simulado (precaché completo, navegación offline y aislamiento de Gasometría). Ver PRUEBAS.txt para resultados y comprobaciones de navegador.
-
-Pendientes de aceptación: comparación visual con las capturas V5 no disponibles; prueba en dispositivos Android/iPhone reales; migración desde el service worker V5 real; confirmación de capacidades/presión nominal del proveedor. El diseño adaptable y los iconos están implementados; no se afirma certificación de compatibilidad con todas las versiones de los sistemas móviles.
-
-## Revertir
-
-Si hay un problema, restaura el commit de V5 en **oxytime**, espera el despliegue y actualiza solo el registro offline de OxyTime. No cambies Gasometría Pro ni limpies el almacenamiento compartido del dominio.
+Se inspeccionó la página pública defectuosa en navegador real. No se pudo abrir la vista local del paquete corregido: la configuración de permisos rechazó iniciar el servidor con el acceso necesario y la herramienta de navegador bloqueó direcciones file://. No se afirma revisión visual de esta corrección ni prueba de migración en navegador real. Pendientes: vista de escritorio/móvil de la corrección, instalación y modo avión Android/iPhone, y ficha técnica de cilindros. El paquete no se publicó automáticamente.

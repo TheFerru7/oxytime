@@ -1,8 +1,10 @@
-OxyTime V5
-9 grupos de pruebas de cálculo y estructura aprobados.
-JavaScript: sintaxis correcta.
-Edge: cálculo en pantalla móvil, tema persistente tras recarga, cálculo y recarga offline bajo /oxytime/, sin errores JavaScript ni desbordamiento horizontal.
-Vista móvil revisada visualmente.
-Manifest e iconos verificados.
-No se publicó ni modificó el repositorio GitHub. Instalación en dispositivos físicos pendiente de comprobar tras publicar.
-Aproximación clínica no validada.
+OxyTime V6 corregido — validación final de archivos
+28 grupos automatizados aprobados: 14 de cálculo/estructura/worker simulado y 14 de interacción con DOM simulado.
+Sintaxis JavaScript: comprobada.
+Los cinco archivos del logo e iconos coinciden byte por byte con los originales V5 proporcionados por el usuario.
+El CSS V5 está conservado íntegramente al principio de la hoja corregida.
+Dimensiones y referencias de iconos del manifest: comprobadas.
+ZIP: index.html en raíz y prueba de integridad aprobada.
+
+NO realizado: revisión visual real de la corrección ni migración en navegador real; acceso a vista local bloqueado por las herramientas. Las pruebas de DOM y service worker son simuladas, no equivalen a esas verificaciones. Android/iPhone físicos y ficha técnica pendientes.
+No se publicó la corrección en GitHub.
